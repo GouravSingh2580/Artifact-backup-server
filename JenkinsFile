@@ -42,6 +42,31 @@ pipeline {
             }
         }
       }
+      stage('Artifactory Upload') {
+  environment {
+    ARTIFACTORY_URL = "http://localhost:8082/"
+    ARTIFACTORY_TOKEN = "xyz"
+    ARTIFACTORY_REPO = "example-repo"
+  }
+  steps {
+    script {
+      def server = Artifactory.server url: ARTIFACTORY_URL, credentialsId: 'artifactory'
+      def uploadSpec = """
+        {
+          "files": [
+            {
+              "pattern": "${DOCKER_IMAGE}",
+              "target": "${ARTIFACTORY_REPO}/${DOCKER_IMAGE}",
+              "props": "docker.image=${DOCKER_IMAGE}"
+            }
+          ]
+        }
+      """
+      server.upload spec: uploadSpec
+    }
+  }
+}
+
     }
   }
 }
