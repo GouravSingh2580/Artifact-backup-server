@@ -43,29 +43,29 @@ pipeline {
         }
       }
       stage('Artifactory Upload') {
-  environment {
-    ARTIFACTORY_URL = "http://localhost:8082/"
-    ARTIFACTORY_TOKEN = "xyz"
-    ARTIFACTORY_REPO = "example-repo"
-  }
-  steps {
-    script {
-      def server = Artifactory.server url: ARTIFACTORY_URL, credentialsId: 'artifactory'
-      def uploadSpec = """
-        {
-          "files": [
-            {
-              "pattern": "${DOCKER_IMAGE}",
-              "target": "${ARTIFACTORY_REPO}/${DOCKER_IMAGE}",
-              "props": "docker.image=${DOCKER_IMAGE}"
-            }
-          ]
+        environment {
+          ARTIFACTORY_URL = "http://localhost:8082/"
+          ARTIFACTORY_TOKEN = "eyJ2ZXIiOiIyIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYiLCJraWQiOiJOcDZlSThiMjRoc3R1TTNnRWxJTGU0OTJ6UjltMFFwangtOHh0dV96NVpBIn0.eyJzdWIiOiJqZmFjQDAxZ3h4NmJmNm1yODNmMGQwcHR2eDEwZDd0XC91c2Vyc1wvamVua2lucy10b2tlbiIsInNjcCI6ImFwcGxpZWQtcGVybWlzc2lvbnNcL2FkbWluIiwiYXVkIjoiKkAqIiwiaXNzIjoiamZmZUAwMWd4eDZiZjZtcjgzZjBkMHB0dngxMGQ3dCIsImlhdCI6MTY4MTM4NjA0OSwianRpIjoiMWQ5OTRjZGQtOGI0OC00MTJiLTlhYWEtZDY5YmNlMGIxNTY2In0.DrJPfKgHZBEBu3nKh3PDGhM_kEvT7Nma2Pq_pQkFFCrWquHVzYOrPjy2mrXV1ctYjWQJFVhU8-v2lZxfrBUOOm9zyTVw7CmOxASRCmwcqxo5e_3FXJJ8j8kvazyxC-wRdIz9T5eIrLlXyGdN0DVBLr2armMudH2W8LZKzy-eeYl7fXbY2Oj-KN_xUYGpaA7EJwVVCBmSEI29vw_6_LL2iJYrlJldpLym1mwHqGjqrZdFNOjrxcA9f3EhnZ5GxlxdXZagfNRQhqoPA2cuMmVBs2stsmpM1gZuUWAcFd0RWS8Ta6XM7Cqi3qozI37GkYTeLBPTxdfQv6wTbqMvBjrMbA"
+          ARTIFACTORY_REPO = "example-repo"
         }
-      """
-      server.upload spec: uploadSpec
-    }
-  }
-}
+        steps {
+          script {
+            def server = Artifactory.server url: ARTIFACTORY_URL, credentialsId: 'artifactory'
+            def uploadSpec = """
+              {
+                "files": [
+                  {
+                    "pattern": "${DOCKER_IMAGE}",
+                    "target": "${ARTIFACTORY_REPO}/${DOCKER_IMAGE}",
+                    "props": "docker.image=${DOCKER_IMAGE}"
+                  }
+                ]
+              }
+            """
+            server.upload spec: uploadSpec
+          }
+        }
+      }
 
     }
   }
