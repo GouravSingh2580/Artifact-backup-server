@@ -32,7 +32,6 @@ pipeline {
     stage('Build and Push Docker Image') {
       environment {
         DOCKER_IMAGE = "gouravsingh258/ultimate-cicd:${BUILD_NUMBER}"
-        // DOCKERFILE_LOCATION = "java-maven-sonar-argocd-helm-k8s/spring-boot-app/Dockerfile"
         REGISTRY_CREDENTIALS = credentials('docker-cred')
       }
       steps {
@@ -43,6 +42,22 @@ pipeline {
             dockerImage.push()
           }
         }
+      }
+    }
+    stage('Artifactory'){
+      steps{
+        rtUpload (
+            serverId: 'jenkins-jfrog',
+            spec: '''{
+                  "files": [
+                    {
+                      "pattern": "*.war",
+                      "target": "jenkins-jfrog"
+                    }
+                ]
+            }'''
+        )
+
       }
     }
   }
